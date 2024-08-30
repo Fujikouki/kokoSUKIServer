@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"awesomeProject1/handler/aunth"
 	"awesomeProject1/handler/webSocket"
 	"awesomeProject1/usecase"
 	"github.com/go-chi/chi/v5"
@@ -18,6 +19,7 @@ func NewRouter(wu usecase.WebSocketUseCase) http.Handler {
 	r.Use(middleware.Recoverer)
 
 	r.Mount("/", webSocket.NewRouter(wu))
+	r.Mount("/login", aunth.NewRouter())
 
 	return r
 
