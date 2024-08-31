@@ -33,3 +33,12 @@ func (a *Account) Create(ctx context.Context, tx *sqlx.Tx, account *object.Accou
 	}
 	return nil
 }
+
+func (a *Account) Login(ctx context.Context, tx *sqlx.Tx, account *object.Account) (*object.Account, error) {
+	var acc object.Account
+	err := a.db.Get(&acc, "SELECT * FROM accounts WHERE email = $1", account.Email)
+	if err != nil {
+		return nil, err
+	}
+	return &acc, nil
+}

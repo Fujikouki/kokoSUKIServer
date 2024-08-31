@@ -18,6 +18,7 @@ func NewRouter(u usecase.AccountUsecase) http.Handler {
 	}
 
 	r.Post("/", h.CreateAccount)
+	r.Post("/login", h.Login)
 
 	return r
 }
