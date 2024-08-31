@@ -49,7 +49,7 @@ func (h *handler) Open(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Printf("Received: %s", message)
 
-		if err = h.c.Save(ctx, "name", string(message)); err != nil {
+		if err = h.c.Save(ctx, 1, 1, string(message)); err != nil {
 			log.Println("Save error:", err)
 		}
 

@@ -23,7 +23,7 @@ func NewChatMessage(db *sqlx.DB) *ChatMessage {
 
 func (c *ChatMessage) Save(ctx context.Context, tx *sqlx.Tx, me *object.ChatMessage) error {
 
-	_, err := c.db.Exec("INSERT INTO chat_messages (name, message, time) VALUES ($1, $2, $3)", me.Name, me.Message, me.Time)
+	_, err := c.db.Exec("INSERT INTO chat_messages (account_id,room_id, message, time) VALUES ($1, $2, $3)", me.AccountId, me.RoomId, me.Message, me.Time)
 	if err != nil {
 		return err
 	}

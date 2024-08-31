@@ -28,8 +28,9 @@ func Run() error {
 
 	webSocketUsecawse := usecase.NewWebSocketUseCase()
 	chatMassageUsecase := usecase.NewChatMessageU(db, dao.NewChatMessage(db))
+	accountUsecase := usecase.NewAccountUsecase(db, dao.NewAccount(db))
 
-	r := handler.NewRouter(webSocketUsecawse, chatMassageUsecase)
+	r := handler.NewRouter(webSocketUsecawse, chatMassageUsecase, accountUsecase)
 
 	ctx, _ := signal.NotifyContext(context.Background(), syscall.SIGTERM, os.Interrupt)
 

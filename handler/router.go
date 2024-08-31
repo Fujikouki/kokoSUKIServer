@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"awesomeProject1/handler/account"
 	"awesomeProject1/handler/aunth"
 	"awesomeProject1/handler/webSocket"
 	"awesomeProject1/usecase"
@@ -9,7 +10,7 @@ import (
 	"net/http"
 )
 
-func NewRouter(wu usecase.WebSocketUseCase, chu usecase.ChatMessageU) http.Handler {
+func NewRouter(wu usecase.WebSocketUseCase, chu usecase.ChatMessageU, acc usecase.AccountUsecase) http.Handler {
 
 	r := chi.NewRouter()
 
@@ -20,6 +21,7 @@ func NewRouter(wu usecase.WebSocketUseCase, chu usecase.ChatMessageU) http.Handl
 
 	r.Mount("/", webSocket.NewRouter(wu, chu))
 	r.Mount("/login", aunth.NewRouter())
+	r.Mount("/account", account.NewRouter(acc))
 
 	return r
 

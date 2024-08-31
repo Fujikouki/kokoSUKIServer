@@ -3,18 +3,20 @@ package object
 import "time"
 
 type ChatMessage struct {
-	ID      int       `db:"id"`
-	Name    string    `db:"name"`
-	Message string    `db:"message"`
-	Time    time.Time `db:"time"`
+	ID        int       `db:"id"`
+	AccountId int       `db:"account_id"`
+	RoomId    int       `db:"room_id"`
+	Message   string    `db:"message"`
+	Time      time.Time `db:"time"`
 }
 
-func NewChatMessage(name, message string) (*ChatMessage, error) {
+func NewChatMessage(accountId, roomId int, message string) (*ChatMessage, error) {
 
 	newMassage := &ChatMessage{
-		Name:    name,
-		Message: message,
-		Time:    time.Now(),
+		AccountId: accountId,
+		RoomId:    roomId,
+		Message:   message,
+		Time:      time.Now(),
 	}
 
 	return newMassage, nil

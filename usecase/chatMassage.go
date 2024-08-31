@@ -8,7 +8,7 @@ import (
 )
 
 type ChatMessageU interface {
-	Save(ctx context.Context, name, message string) error
+	Save(ctx context.Context, accountId, roomId int, message string) error
 }
 
 type ChatMessageR struct {
@@ -25,9 +25,9 @@ func NewChatMessageU(db *sqlx.DB, chatMessageRepo repository.ChatMessageReposito
 	}
 }
 
-func (c *ChatMessageR) Save(ctx context.Context, name, message string) error {
+func (c *ChatMessageR) Save(ctx context.Context, accountId, roomId int, message string) error {
 
-	newMessage, err := object.NewChatMessage(name, message)
+	newMessage, err := object.NewChatMessage(accountId, roomId, message)
 
 	if err != nil {
 		return err
