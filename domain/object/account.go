@@ -8,14 +8,16 @@ import (
 
 type Account struct {
 	ID           int       `db:"id"`
+	Email        string    `db:"email"`
 	Username     string    `db:"username"`
 	PasswordHash string    `db:"password_hash"`
 	IconUrl      string    `db:"icon_url"`
 	CreatedAt    time.Time `db:"created_at"`
 }
 
-func NewAccount(username, password, iconUrl string) (*Account, error) {
+func NewAccount(email, username, password, iconUrl string) (*Account, error) {
 	newAccount := &Account{
+		Email:        email,
 		Username:     username,
 		PasswordHash: password,
 		IconUrl:      iconUrl,

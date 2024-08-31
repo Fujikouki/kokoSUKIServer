@@ -6,6 +6,7 @@ import (
 )
 
 type AccountRequest struct {
+	Email    string
 	Username string
 	Password string
 	IconUrl  string
@@ -22,7 +23,7 @@ func (h *handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
-	err := h.accountUsecase.CreateAccount(ctx, req.Username, req.Password, req.IconUrl)
+	err := h.accountUsecase.CreateAccount(ctx, req.Email, req.Username, req.Password, req.IconUrl)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

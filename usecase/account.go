@@ -8,7 +8,7 @@ import (
 )
 
 type AccountUsecase interface {
-	CreateAccount(ctx context.Context, username, password, iconUrl string) error
+	CreateAccount(ctx context.Context, email, username, password, iconUrl string) error
 }
 
 type AccountR struct {
@@ -22,9 +22,9 @@ func NewAccountUsecase(db *sqlx.DB, accountRepo repository.AccountRepository) *A
 	return &AccountR{db: db, accountRepo: accountRepo}
 }
 
-func (a *AccountR) CreateAccount(ctx context.Context, username, password, iconUrl string) error {
+func (a *AccountR) CreateAccount(ctx context.Context, email, username, password, iconUrl string) error {
 
-	acc, err := object.NewAccount(username, password, iconUrl)
+	acc, err := object.NewAccount(email, username, password, iconUrl)
 	if err != nil {
 		return err
 	}
