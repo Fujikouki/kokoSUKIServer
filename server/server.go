@@ -1,6 +1,7 @@
 package server
 
 import (
+	"awesomeProject1/dao"
 	"awesomeProject1/handler"
 	"awesomeProject1/usecase"
 	"context"
@@ -20,9 +21,16 @@ func Run() error {
 
 	log.Printf("Server started on http://%s\n", addr)
 
-	webSocketUsecawse := usecase.NewWebSocketUseCase()
+	db, err := dao.NewDB()
+	if err != nil {
+		log.Fatalf("Failed to connect to DB) %v", err)
+	}
 
-	r := handler.NewRouter(webSocketUsecawse)
+	webSocketUsecawse := usecase.NewWebSocketUseCase()
+	chatMassageUsecase := usecase.NewChatMessageU(db, dao.NewChatMessage(db))
+	accountUsecase := usecase.NewAccountUsecase(db, dao.NewAccount(db))
+
+	r := handler.NewRouter(webSocketUsecawse, chatMassageUsecase, accountUsecase)
 
 	ctx, _ := signal.NotifyContext(context.Background(), syscall.SIGTERM, os.Interrupt)
 
