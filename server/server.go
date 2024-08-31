@@ -5,6 +5,7 @@ import (
 	"awesomeProject1/handler"
 	"awesomeProject1/usecase"
 	"context"
+	"github.com/gorilla/sessions"
 	"log"
 	"net"
 	"net/http"
@@ -26,11 +27,13 @@ func Run() error {
 		log.Fatalf("Failed to connect to DB) %v", err)
 	}
 
+	var se *sessions.CookieStore = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
+
 	webSocketUsecawse := usecase.NewWebSocketUseCase()
 	chatMassageUsecase := usecase.NewChatMessageU(db, dao.NewChatMessage(db))
 	accountUsecase := usecase.NewAccountUsecase(db, dao.NewAccount(db))
 
-	r := handler.NewRouter(webSocketUsecawse, chatMassageUsecase, accountUsecase)
+	r := handler.NewRouter(webSocketUsecawse, chatMassageUsecase, accountUsecase, se)
 
 	ctx, _ := signal.NotifyContext(context.Background(), syscall.SIGTERM, os.Interrupt)
 

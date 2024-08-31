@@ -14,6 +14,22 @@ var upgrade = websocket.Upgrader{
 }
 
 func (h *handler) Open(w http.ResponseWriter, r *http.Request) {
+
+	url := r.URL
+	session, err := h.se.Get(r, "session-name")
+	if err != nil {
+		log.Println("Session get error:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	f, ok := session.Values["value"].(string)
+	if !ok {
+		println("value取得失敗")
+	}
+	println(url.Path)
+	println(f)
+
 	// HTTP接続をWebSocketにアップグレード
 	conn, err := upgrade.Upgrade(w, r, nil)
 	if err != nil {

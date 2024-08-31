@@ -3,21 +3,25 @@ package account
 import (
 	"awesomeProject1/usecase"
 	"github.com/go-chi/chi/v5"
+	"github.com/gorilla/sessions"
 	"net/http"
 )
 
 type handler struct {
-	accountUsecase usecase.AccountUsecase
+	accountUseCase usecase.AccountUsecase
+	cs             *sessions.CookieStore
 }
 
-func NewRouter(u usecase.AccountUsecase) http.Handler {
+func NewRouter(u usecase.AccountUsecase, se *sessions.CookieStore) http.Handler {
 	r := chi.NewRouter()
 
 	h := &handler{
-		accountUsecase: u,
+		accountUseCase: u,
+		cs:             se,
 	}
 
-	r.Post("/", h.CreateAccount)
+	r.Post("/create", h.CreateAccount)
+
 	r.Post("/login", h.Login)
 
 	return r
