@@ -21,7 +21,8 @@ func NewAccount(db *sqlx.DB) *Account {
 
 func (a *Account) Create(ctx context.Context, tx *sqlx.Tx, account *object.Account) error {
 	_, err := a.db.Exec(
-		"INSERT INTO accounts (username, password_hash, icon_url, created_at) VALUES ($1, $2, $3, $4)",
+		"INSERT INTO accounts (email,username, password_hash, icon_url, created_at) VALUES ($1, $2, $3, $4,$5)",
+		account.Email,
 		account.Username,
 		account.PasswordHash,
 		account.IconUrl,
@@ -31,4 +32,13 @@ func (a *Account) Create(ctx context.Context, tx *sqlx.Tx, account *object.Accou
 		return err
 	}
 	return nil
+}
+
+func (a *Account) Login(ctx context.Context, tx *sqlx.Tx, account *object.Account) (*object.Account, error) {
+	var acc object.Account
+	err := a.db.Get(&acc, "SELECT * FROM accounts WHERE email = $1", account.Email)
+	if err != nil {
+		return nil, err
+	}
+	return &acc, nil
 }

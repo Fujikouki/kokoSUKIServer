@@ -7,15 +7,20 @@ import (
 	"time"
 )
 
-var upgrade = websocket.Upgrader{
-	CheckOrigin: func(r *http.Request) bool {
-		return true
+var upGrader = websocket.Upgrader{
+	HandshakeTimeout: 5 * time.Second,               // ハンドシェイクのタイムアウトを5秒に設定
+	ReadBufferSize:   1024,                          // 読み取りバッファを1KBに設定
+	WriteBufferSize:  1024,                          // 書き込みバッファを1KBに設定
+	Subprotocols:     []string{"chat", "superchat"}, // サポートするサブプロトコルを設定
+	Error: func(w http.ResponseWriter, r *http.Request, status int, reason error) {
+		http.Error(w, reason.Error(), status)
 	},
+	EnableCompression: true, // メッセージの圧縮を有効にする
 }
 
 func (h *handler) Open(w http.ResponseWriter, r *http.Request) {
 	// HTTP接続をWebSocketにアップグレード
-	conn, err := upgrade.Upgrade(w, r, nil)
+	conn, err := upGrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println("Upgrade error:", err)
 		return

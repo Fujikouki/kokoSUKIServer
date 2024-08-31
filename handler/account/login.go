@@ -3,17 +3,16 @@ package account
 import (
 	"encoding/json"
 	"github.com/gorilla/sessions"
+	"log"
 	"net/http"
 )
 
-type AccountRequest struct {
+type LoginRequest struct {
 	Email    string
-	Username string
 	Password string
-	IconUrl  string
 }
 
-func (h *handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
+func (h *handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	var req AccountRequest
 
@@ -24,7 +23,7 @@ func (h *handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
-	err := h.accountUseCase.CreateAccount(ctx, req.Email, req.Username, req.Password, req.IconUrl)
+	acc, err := h.accountUseCase.Login(ctx, req.Email, req.Password)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -42,9 +41,10 @@ func (h *handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 
 	session.Options = &sessions.Options{
 		Path:     "/",
-		MaxAge:   3600, // 1時間
-		HttpOnly: false,
-		Secure:   false,
+		MaxAge:   3600,  // 1時間
+		HttpOnly: false, // クライアント側のJavaScriptからアクセスを防ぐ
+		Secure:   false, // HTTPS接続でのみクッキーが送信される
+		SameSite: http.SameSiteLaxMode,
 	}
 
 	err = session.Save(r, w)
@@ -53,13 +53,17 @@ func (h *handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	for key, value := range session.Values {
+		log.Printf("Session key: %s, value: %v", key, value)
+	}
+
 	_, err = w.Write([]byte("true"))
 	if err != nil {
 		http.Error(w, "Failed to write response: "+err.Error(), http.StatusInternalServerError)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode("true"); err != nil {
+	if err := json.NewEncoder(w).Encode(acc.Username); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

@@ -8,4 +8,5 @@ import (
 
 type AccountRepository interface {
 	Create(ctx context.Context, tx *sqlx.Tx, account *object.Account) error
+	Login(ctx context.Context, tx *sqlx.Tx, account *object.Account) (*object.Account, error)
 }
