@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-func NewRouter(wu usecase.WebSocketUseCase) http.Handler {
+func NewRouter(wu usecase.WebSocketUseCase, chu usecase.ChatMessageU) http.Handler {
 
 	r := chi.NewRouter()
 
@@ -18,7 +18,7 @@ func NewRouter(wu usecase.WebSocketUseCase) http.Handler {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	r.Mount("/", webSocket.NewRouter(wu))
+	r.Mount("/", webSocket.NewRouter(wu, chu))
 	r.Mount("/login", aunth.NewRouter())
 
 	return r

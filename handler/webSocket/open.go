@@ -25,6 +25,8 @@ func (h *handler) Open(w http.ResponseWriter, r *http.Request) {
 	ticker := time.NewTicker(1 * time.Second)
 	defer ticker.Stop()
 
+	ctx := r.Context()
+
 	go func() {
 		for {
 			select {
@@ -46,6 +48,11 @@ func (h *handler) Open(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		log.Printf("Received: %s", message)
+
+		if err = h.c.Save(ctx, "name", string(message)); err != nil {
+			log.Println("Save error:", err)
+		}
+
 		// クライアントにメッセージを送り返す
 		message, _ = h.u.Open(message)
 		err = conn.WriteMessage(mt, message)
