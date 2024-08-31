@@ -1,6 +1,7 @@
 package webSocket
 
 import (
+	"awesomeProject1/handler/aunth"
 	"awesomeProject1/usecase"
 	"github.com/go-chi/chi/v5"
 	"github.com/gorilla/sessions"
@@ -16,6 +17,8 @@ type handler struct {
 func NewRouter(u usecase.WebSocketUseCase, chu usecase.ChatMessageU, se *sessions.CookieStore) http.Handler {
 
 	r := chi.NewRouter()
+
+	r.Use(aunth.Middleware(se))
 
 	h := &handler{
 		u:  u,

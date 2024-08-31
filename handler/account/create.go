@@ -42,10 +42,9 @@ func (h *handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 
 	session.Options = &sessions.Options{
 		Path:     "/",
-		MaxAge:   3600,  // 1時間
-		HttpOnly: false, // クライアント側のJavaScriptからアクセスを防ぐ
-		Secure:   false, // HTTPS接続でのみクッキーが送信される
-
+		MaxAge:   3600, // 1時間
+		HttpOnly: false,
+		Secure:   false,
 	}
 
 	err = session.Save(r, w)
