@@ -20,7 +20,7 @@ func NewRouter(wu usecase.WebSocketUseCase, chu usecase.ChatMessageU, acc usecas
 	r.Use(middleware.Recoverer)
 
 	r.Mount("/we", webSocket.NewRouter(wu, chu, se))
-	r.Mount("/", account.NewRouter(acc, se))
+	r.Mount("/account", account.NewRouter(acc, se))
 
 	return r
 
